@@ -2,6 +2,7 @@ package CA3.Project.src.component;
 
 
 import CA3.Project.src.App;
+import CA3.Project.src.utility.GameUtility;
 import CA3.Project.src.utility.MinuteTimer;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public class MainBoard extends  JLayeredPane {
 
    public static int writtenChars = 0;
    public static int correctChars = 0;
-    Highlighter highlighter = writeArea.getHighlighter();
+
     public static void clearWriteArea(){
         writeArea.setText("");
         correctChars=0;
@@ -145,6 +146,7 @@ public class MainBoard extends  JLayeredPane {
 
     public  void loadContent(){
         try{
+            char[] difficultKeys = {'x','y','z'};
             Path path = Paths.get("src/CA3/Project/src/asset/content");
             ArrayList<Path> contentList = new ArrayList<>();
             Files.list(path).forEach((p)->{contentList.add(p);});
@@ -152,10 +154,17 @@ public class MainBoard extends  JLayeredPane {
             int randomIndex = new Random().nextInt(contentList.size());
 
             BufferedReader reader = 	Files.newBufferedReader(contentList.get(randomIndex)) ;
-            reader.lines().forEach((e)-> contentArea.setText(e));
+            reader.lines().forEach((e)-> {
+                StringBuilder difficultWord=new StringBuilder();
+               for(int i = 0; i<5; i++){
+                    difficultWord.append(GameUtility.GenerateWord(difficultKeys)).append(" ");
+               }
+                contentArea.setText(difficultWord+e+" "+difficultWord);
+            });
+
 
         }catch (Exception e){
-
+            System.out.println(e.getMessage());
         }
     }
 
