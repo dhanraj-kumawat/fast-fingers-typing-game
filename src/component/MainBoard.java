@@ -146,7 +146,7 @@ public class MainBoard extends  JLayeredPane {
 
     public  void loadContent(){
         try{
-            char[] difficultKeys = {'x','y','z'};
+            char[] difficultKeys = GameUtility.getdifficultKeys();
             Path path = Paths.get("src/CA3/Project/src/asset/content");
             ArrayList<Path> contentList = new ArrayList<>();
             Files.list(path).forEach((p)->{contentList.add(p);});

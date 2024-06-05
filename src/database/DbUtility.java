@@ -7,12 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DbUtility {
     private static final Connection dbConnection = Db.getDatabseConnection();
-    public static List<Key> getMistypedKeys(){
-        List<Key> misTypedKeys = new ArrayList<>();
+    public static Map<Character, Integer> getMistypedKeys(){
+        HashMap<Character, Integer> keyToCount = new HashMap<>();
         try {
             Connection con = dbConnection;
             String query = "SELECT *from mistyped_keys";
@@ -22,21 +24,20 @@ public class DbUtility {
             while(rs.next()){
                 char wrong_key = rs.getString("mistyped_key").charAt(0);
                 int wrong_count = rs.getInt("count");
-                System.out.println(wrong_key+" "+ wrong_count);
-                misTypedKeys.add(new Key(wrong_key, wrong_count));
+                keyToCount.put(wrong_key, wrong_count);
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        return misTypedKeys;
+        return keyToCount;
     }
-    public static void updateMistypedKeys(List<Key> updatedKeysList){
+    public static void updateMistypedKeys(List<Key> keyToCountList){
         try {
             Connection con = dbConnection;
             String query = "update mistyped_keys set count=? where mistyped_key=?";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(query);
-            updatedKeysList.forEach((key) -> {
+            keyToCountList.forEach((key) -> {
                 char misTypedKey = key.getWrongKey();
                 int wrongCount = key.getWrongCount();
                 try {
