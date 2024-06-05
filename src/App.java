@@ -60,7 +60,7 @@ public class App  {
                    if(res== JOptionPane.OK_OPTION){
 
                        Connection connection =  FastFingersXD.getDbConnection();
-                       String query = "SELECT * From players_tb where username=?";
+                       String query = "SELECT * From users where username=?";
                        String userName = App.getUserName();
                        System.out.println(userName);
                        try {
@@ -71,11 +71,11 @@ public class App  {
 
                            if(resultSet.next()){
                                String username = resultSet.getString("username");
-                               int prevSpeed = resultSet.getInt("SPEED");
+                               int prevSpeed = resultSet.getInt("BEST_SPEED");
 
                                float accuracy = MainBoard.getAccuracy();
                                if(newSpeed > prevSpeed){
-                                   String q2 = "update players_tb set speed=? where username=?";
+                                   String q2 = "update users set speed=? where username=?";
                                    PreparedStatement p2  = connection.prepareStatement(q2);
                                    p2.setInt(1, newSpeed);
                                    p2.setString(2, username);
@@ -88,7 +88,7 @@ public class App  {
                                System.out.println(username + prevSpeed);
                            }
                            else{
-                               String q = "Insert into players_tb(username,speed) values(?,?)";
+                               String q = "Insert into users(username,best_speed) values(?,?)";
                                PreparedStatement ps1= connection.prepareStatement(q);
                                ps1.setString(1,userName);
                                ps1.setInt(2,MainBoard.getSpeed());

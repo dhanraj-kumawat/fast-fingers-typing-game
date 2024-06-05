@@ -2,6 +2,7 @@ package CA3.Project.src;
 
 
 import CA3.Project.src.database.Db;
+import CA3.Project.src.database.DbUtility;
 import CA3.Project.src.utility.GameUtility;
 
 import java.sql.Array;
@@ -16,6 +17,7 @@ public class FastFingersXD {
 
     public static void main(String[] args) {
         System.out.println(GameUtility.GenerateWord(new char[]{'a','x','c','p'}));
+        System.out.println(DbUtility.getMistypedKeys());
         App app = new App();
         app.startApp();
     }

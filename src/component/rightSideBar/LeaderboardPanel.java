@@ -24,7 +24,7 @@ public class LeaderboardPanel extends JPanel {
         try{
 
             Connection connection = FastFingersXD.getDbConnection();
-            String query = "SELECT * From players_tb order by speed Desc limit 25";
+            String query = "SELECT * From users order by best_speed Desc limit 25";
 
             PreparedStatement ps = connection.prepareStatement(query);
             ResultSet resultSet = ps.executeQuery();  // for dql
@@ -33,7 +33,7 @@ public class LeaderboardPanel extends JPanel {
             int rank = 1;
             while(resultSet.next()){
                 String username = resultSet.getString("username");
-                int speed = resultSet.getInt("speed");
+                int speed = resultSet.getInt("best_speed");
 
                 tableModel.addRow(new Object[]{rank++,username, speed});
                 System.out.println(username+speed);

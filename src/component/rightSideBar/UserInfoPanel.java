@@ -27,7 +27,7 @@ public class UserInfoPanel extends JPanel {
 
 
 
-            String query = "Select * from players_tb where username=?";
+            String query = "Select * from users where username=?";
             assert connection != null;
             PreparedStatement ps = connection.prepareStatement(query);
             System.out.println(App.getUserName());
@@ -35,11 +35,11 @@ public class UserInfoPanel extends JPanel {
             ResultSet resultSet = ps.executeQuery();
             if(resultSet.next()){
                 String username = resultSet.getString("username") ;
-                int speed = resultSet.getInt("speed");
+                int speed = resultSet.getInt("best_speed");
                 JLabel nameLabel = new JLabel(username);
                 JLabel speedLabel = new JLabel(""+speed);
 
-                String rankQuery = "Select count(*) from players_tb where speed>?";
+                String rankQuery = "Select count(*) from users where best_speed>?";
                 PreparedStatement ps2 = connection.prepareStatement(rankQuery);
                 ps2.setInt(1,speed);
                 int userrank = 0;
