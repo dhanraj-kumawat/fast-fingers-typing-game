@@ -10,15 +10,15 @@ public class GameUtility {
         StringBuilder word = new StringBuilder();
         Random random = new Random();
         int index =(int)( Math.random() *10)%keys.length;
-        word.append((char)('A' + (keys[index]-'a')));
+        word.append(keys[index]);
         for(int i=0; i<4; i++){
             char ch = (char) ('a'+random.nextInt(25));
             word.append(ch);
         }
-        word.append(keys[index]);
+        word.append(keys[(index+3)%keys.length]);
         return word.toString();
     }
-    public static char[] getdifficultKeys(){
+    public static char[] getDifficultKeys(){
         Map<Character, Integer> keyToCountMap = DbUtility.getMistypedKeys();
         char[] difficult = new char[5];
         ArrayList<Key> allKeysList = new ArrayList<>();
@@ -42,8 +42,6 @@ public class GameUtility {
                 difficultKeysPq.add(new Key(allKeysList.get(i).getWrongKey(), allKeysList.get(i).getWrongCount()));
             }
         }
-
-
 
         // updating difficult array
         int index = 0;

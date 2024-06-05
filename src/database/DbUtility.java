@@ -31,24 +31,23 @@ public class DbUtility {
         }
         return keyToCount;
     }
-    public static void updateMistypedKeys(List<Key> keyToCountList){
+    public static void updateMistypedKeys(Map<Character, Integer> keyToCount){
         try {
             Connection con = dbConnection;
             String query = "update mistyped_keys set count=? where mistyped_key=?";
             assert con != null;
             PreparedStatement ps = con.prepareStatement(query);
-            keyToCountList.forEach((key) -> {
-                char misTypedKey = key.getWrongKey();
-                int wrongCount = key.getWrongCount();
+            for(char key : keyToCount.keySet()){
+                int wrongCount = keyToCount.get(key);
                 try {
-                    ps.setString(1,""+misTypedKey);
+                    ps.setString(1,""+ key);
                     ps.setInt(2, wrongCount);
                     int response = ps.executeUpdate();
                     if(response == 0) System.out.println("key update failed");
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
-            });
+            }
         }catch (Exception e){
             System.out.println(e.getMessage());
         }

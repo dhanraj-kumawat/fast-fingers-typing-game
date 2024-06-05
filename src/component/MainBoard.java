@@ -2,13 +2,13 @@ package CA3.Project.src.component;
 
 
 import CA3.Project.src.App;
+import CA3.Project.src.database.DbUtility;
 import CA3.Project.src.utility.GameUtility;
 import CA3.Project.src.utility.MinuteTimer;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Highlighter;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -17,15 +17,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 
 public class MainBoard extends  JLayeredPane {
     static JTextArea contentArea = new JTextArea("");
     static JTextArea writeArea = new JTextArea();
+    public  static Map<Character, Integer> keyToCount = DbUtility.getMistypedKeys();
 
-   public static int writtenChars = 0;
-   public static int correctChars = 0;
+    public static int writtenChars = 0;
+    public static int correctChars = 0;
 
     public static void clearWriteArea(){
         writeArea.setText("");
@@ -79,10 +81,19 @@ public class MainBoard extends  JLayeredPane {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 int offset = e.getOffset();
-                char c = writeArea.getText().charAt(offset);
-
-               if(c == contentArea.getText().charAt(offset))
+                char wrote = writeArea.getText().charAt(offset);
+                char toWrite = contentArea.getText().charAt(offset);
+               if(wrote == toWrite ){
                    correctChars++;
+               }
+               else if (toWrite == ' '){}
+               else{
+                   if(keyToCount.containsKey(toWrite))
+                       keyToCount.put(toWrite, keyToCount.get(toWrite)+1);
+                   else
+                       keyToCount.put(toWrite, 1);
+                   System.out.println(keyToCount);
+               }
                 writtenChars++;
             }
 
@@ -146,7 +157,7 @@ public class MainBoard extends  JLayeredPane {
 
     public  void loadContent(){
         try{
-            char[] difficultKeys = GameUtility.getdifficultKeys();
+            char[] difficultKeys = GameUtility.getDifficultKeys();
             Path path = Paths.get("src/CA3/Project/src/asset/content");
             ArrayList<Path> contentList = new ArrayList<>();
             Files.list(path).forEach((p)->{contentList.add(p);});
